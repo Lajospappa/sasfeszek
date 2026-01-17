@@ -5,17 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sasfészek túra 2026</title>
   <style>
-    /* --- 1. GLOBÁLIS ÉS HÁTTÉR BEÁLLÍTÁSOK (Minden eszközre) --- */
+    /* --- 1. GLOBÁLIS ÉS HÁTTÉR BEÁLLÍTÁSOK --- */
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
-      background-color: #000;
+      /* Amíg a kép tölt, ez a színátmenet látszik (Alpok-kék/szürke) */
+      background: #1a1c2c; 
+      background: linear-gradient(135deg, #1a1c2c 0%, #4a5d71 100%);
+      background-attachment: fixed;
       color: #fff;
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      scroll-behavior: smooth;
     }
 
-    /* A fixált háttér réteg - PC-n és iOS-en is stabil */
+    /* A fixált háttér réteg - PC-n és iOS-en is stabil villogás nélkül */
     body::before {
       content: "";
       position: fixed;
@@ -23,24 +27,24 @@
       left: 0;
       width: 100%;
       height: 100%;
-      /* Sötétített gradiens, hogy a fehér szövegek mindenhol olvashatók legyenek */
+      /* Sötétített réteg a kép felett az olvashatóságért */
       background: 
-        linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)),
+        linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)),
         url('assets/sasfeszekmotorral2026.png') center/cover no-repeat;
       z-index: -1;
       will-change: transform;
     }
 
-    /* Safari iOS javítás a magassághoz */
+    /* Safari iOS javítás a pontos magassághoz */
     @supports (-webkit-touch-callout: none) {
       body::before { height: -webkit-fill-available; }
     }
 
-    /* --- 2. ELRENDEZÉS (PC-re optimalizálva) --- */
+    /* --- 2. ELRENDEZÉS ÉS KERETEK --- */
     .page {
       width: 100%;
-      max-width: 1000px; /* PC-n nem engedi túl szélesre, így esztétikus */
-      margin: 0 auto;    /* Középre zárja PC-n */
+      max-width: 1000px; /* PC-n nem engedi szétfolyni a tartalmat */
+      margin: 0 auto;
       padding: 20px;
       box-sizing: border-box;
     }
@@ -50,14 +54,25 @@
       text-align: center;
     }
 
-    .brand .title { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
-    .brand .subtitle { font-size: 1.1rem; opacity: 0.8; margin-top: 5px; }
+    .brand .title { 
+      font-size: 2.5rem; 
+      font-weight: 800; 
+      text-transform: uppercase; 
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    .brand .subtitle { 
+      font-size: 1.1rem; 
+      opacity: 0.8; 
+      margin-top: 5px; 
+    }
 
     .card.header-card {
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 25px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 20px;
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.1);
       margin-bottom: 30px;
@@ -67,20 +82,24 @@
     /* --- 3. NAPI KÁRTYÁK STÍLUSA --- */
     .poi.poi-withimg {
       display: flex;
-      flex-direction: row; /* Alapértelmezett: egymás mellett (PC) */
-      background: rgba(20, 20, 20, 0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      flex-direction: row;
+      background: rgba(20, 20, 20, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-radius: 16px;
       margin-bottom: 25px;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.1);
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
     }
 
-    .poi.poi-withimg:hover {
-      transform: translateY(-5px); /* PC-n egérrel mutatós effekt */
-      border-color: rgba(255,255,255,0.3);
+    /* PC-n kiemeli a kártyát, ha fölé viszed az egeret */
+    @media (min-width: 769px) {
+      .poi.poi-withimg:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255,255,255,0.3);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
     }
 
     .poi-left {
@@ -92,65 +111,74 @@
     }
 
     .poi-right {
-      flex: 0 0 40%;
-      min-height: 200px;
+      flex: 0 0 42%;
+      min-height: 220px;
     }
 
     .poi-right img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
     .poi-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; color: #ffca28; }
-    .coords { font-size: 0.95rem; line-height: 1.4; opacity: 0.9; }
-    .day-metrics { margin-top: 10px; font-weight: 600; color: #4caf50; }
+    .coords { font-size: 0.95rem; line-height: 1.4; opacity: 0.85; }
+    .day-metrics { margin-top: 12px; font-weight: 600; color: #4caf50; font-size: 0.9rem; }
 
     /* Gombok */
-    .poibtns { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+    .poibtns { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
     .btn {
-      padding: 10px 18px;
+      padding: 10px 16px;
       border-radius: 8px;
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: #fff;
       display: inline-flex;
       align-items: center;
       transition: background 0.2s;
     }
-    .btn-accent { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.3); }
-    .btn-accent:hover { background: rgba(255, 255, 255, 0.25); }
+    .btn-accent { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2); }
     .btn-blue { background: #1976d2; }
     .btn-calimoto { background: #d32f2f; }
-    .btn-download { background: #388e3c; width: 100%; justify-content: center; margin-top: 5px; }
+    .btn-download { 
+      background: #388e3c; 
+      width: 100%; 
+      justify-content: center; 
+      margin-top: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
 
-    /* --- 4. MOBIL FINOMÍTÁS (Ha telefonon nézik, a kép felülre kerül) --- */
+    /* --- 4. MOBIL NÉZET --- */
     @media (max-width: 768px) {
+      .page { padding: 15px; }
       .poi.poi-withimg { flex-direction: column-reverse; }
       .poi-right { flex: 0 0 180px; }
       .brand .title { font-size: 1.8rem; }
+      .poi-left { padding: 20px; }
     }
 
-    /* Térkép kártya */
+    /* --- 5. TÉRKÉP SZEKCIÓ --- */
     .tourmap-card {
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.6);
       padding: 20px;
       border-radius: 20px;
       margin-top: 30px;
+      border: 1px solid rgba(255,255,255,0.1);
     }
     .tourmap-wrap {
       position: relative;
       border-radius: 12px;
       overflow: hidden;
-      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
     .tourmap-img { width: 100%; display: block; }
     .tourmap-me {
-      position: absolute; width: 20px; height: 20px;
-      background: #f44336; border: 3px solid #fff;
+      position: absolute; width: 18px; height: 18px;
+      background: #f44336; border: 2px solid #fff;
       border-radius: 50%; transform: translate(-50%, -50%);
-      display: none; box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      display: none; box-shadow: 0 0 10px rgba(0,0,0,0.8);
     }
   </style>
 </head>
@@ -159,7 +187,7 @@
 <div class="page">
   <header class="topbar">
     <div class="brand">
-      <div class="title">Sasfészek túra</div>
+      <h1 class="title">Sasfészek túra</h1>
       <div class="subtitle">Motoros Kaland az Alpokban • 2026</div>
     </div>
   </header>
@@ -168,112 +196,155 @@
     <div><strong>4 napos túra:</strong> 1169 km élménymotorozás, hágók és történelmi helyszínek.</div>
   </div>
 
-  <div class="poi poi-withimg">
-    <div class="poi-left">
-      <div class="poi-title">DAY 01 – Indulás Bruck an der Mur-ba</div>
-      <div class="coords">Velence → Bruck an der Mur. Tranzit szakasz a Dunántúlon és Burgenlandon át.</div>
-      <div class="day-metrics">📏 314 km | ⛰️ 3328 m | 📉 2959 m</div>
-      <div class="poibtns">
-        <a class="btn btn-accent" href="day01/index.html">📋 Lista</a>
-        <a class="btn btn-blue" href="https://www.google.com/maps" target="_blank">🗺️ Navigáció</a>
-        <a class="btn btn-calimoto" href="https://calimoto.com/calimotour/sasfész-1.-nap-r-UiYq0kGtee" target="_blank">🏍️ Calimoto</a>
-        <a class="btn btn-download" href="Sasfészek 2026 POI pontok gpx/Sasfész 1. nap (1).gpx" download>⬇️ GPX Letöltés</a>
+  <div class="grid">
+    <div class="poi poi-withimg">
+      <div class="poi-left">
+        <div class="poi-title">DAY 01 – Bruck an der Mur</div>
+        <div class="coords">Velence → Bruck an der Mur. Tranzit szakasz a Dunántúlon és Burgenlandon át az Alpok lábáig.</div>
+        <div class="day-metrics">📍 314 km | ▲ 3328 m | ▼ 2959 m</div>
+        <div class="poibtns">
+          <a class="btn btn-accent" href="day01/index.html">📋 Lista nézet</a>
+          <a class="btn btn-blue" href="https://www.google.com/maps/dir/Velence/Bruck+an+der+Mur" target="_blank">🗺️ Navigáció</a>
+          <a class="btn btn-calimoto" href="https://calimoto.com/calimotour/sasfész-1.-nap-r-UiYq0kGtee" target="_blank">🏍️ Calimoto</a>
+          <a class="btn btn-download" href="Sasfészek 2026 POI pontok gpx/Sasfész 1. nap (1).gpx" download>⬇️ GPX Letöltés</a>
+        </div>
+      </div>
+      <div class="poi-right">
+        <img src="images/day01/01_somlo_tanuhegy.jpg" alt="Day 01">
       </div>
     </div>
-    <div class="poi-right">
-      <img src="images/day01/01_somlo_tanuhegy.jpg" alt="Day 01">
-    </div>
-  </div>
 
-  <div class="poi poi-withimg">
-    <div class="poi-left">
-      <div class="poi-title">DAY 02 – Hágók és Tavak</div>
-      <div class="coords">Bruck an der Mur → Königssee. Alpesi panoráma utak és kristálytiszta tavak.</div>
-      <div class="day-metrics">📏 280 km | ⛰️ 4516 m | 📉 4419 m</div>
-      <div class="poibtns">
-        <a class="btn btn-accent" href="day02/index.html">📋 Lista</a>
-        <a class="btn btn-blue" href="https://www.google.com/maps" target="_blank">🗺️ Navigáció</a>
-        <a class="btn btn-calimoto" href="https://calimoto.com/calimotour/sasfész-2.-nap-r-JiCywkqBOs" target="_blank">🏍️ Calimoto</a>
-        <a class="btn btn-download" href="Sasfészek 2026 POI pontok gpx/Sasfész 2. nap (1).gpx" download>⬇️ GPX Letöltés</a>
+    <div class="poi poi-withimg">
+      <div class="poi-left">
+        <div class="poi-title">DAY 02 – Hágók és Tavak</div>
+        <div class="coords">Bruck an der Mur → Königssee. Alpesi panoráma utak, hágók és Berchtesgaden térsége.</div>
+        <div class="day-metrics">📍 280 km | ▲ 4516 m | ▼ 4419 m</div>
+        <div class="poibtns">
+          <a class="btn btn-accent" href="day02/index.html">📋 Lista nézet</a>
+          <a class="btn btn-blue" href="https://www.google.com/maps/dir/Bruck+an+der+Mur/Königssee" target="_blank">🗺️ Navigáció</a>
+          <a class="btn btn-calimoto" href="https://calimoto.com/calimotour/sasfész-2.-nap-r-JiCywkqBOs" target="_blank">🏍️ Calimoto</a>
+          <a class="btn btn-download" href="Sasfészek 2026 POI pontok gpx/Sasfész 2. nap (1).gpx" download>⬇️ GPX Letöltés</a>
+        </div>
+      </div>
+      <div class="poi-right">
+        <img src="images/day02/01_praebichl_hago.jpg" alt="Day 02">
       </div>
     </div>
-    <div class="poi-right">
-      <img src="images/day02/01_praebichl_hago.jpg" alt="Day 02">
-    </div>
-  </div>
 
-  <div class="poi poi-withimg">
-    <div class="poi-left">
-      <div class="poi-title">DAY 03 – A Sasfészek napja</div>
-      <div class="coords">Königssee → Hallstatt. Kehlsteinhaus meglátogatása és pihenő Hallstattban.</div>
-      <div class="day-metrics">📏 81 km | ⛰️ 1964 m | 📉 2043 m</div>
-      <div class="poibtns">
-        <a class="btn btn-accent" href="day03/index.html">📋 Lista</a>
-        <a class="btn btn-blue" href="https://www.google.com/maps" target="_blank">🗺️ Navigáció</a>
-        <a class="btn btn-calimoto" href="https://calimoto.com/calimotour/sasfész-3.-nap-r-DON7nAc9fv" target="_blank">🏍️ Calimoto</a>
-        <a class="btn btn-download" href="Sasfészek 2026 POI pontok gpx/Sasfész 3. nap.gpx" download>⬇️ GPX Letöltés</a>
+    <div class="poi poi-withimg">
+      <div class="poi-left">
+        <div class="poi-title">DAY 03 – A Sasfészek napja</div>
+        <div class="coords">Königssee → Hallstatt. Kehlsteinhaus (Sasfészek) meglátogatása és pihenő Hallstattban.</div>
+        <div class="day-metrics">📍 81 km | ▲ 1964 m | ▼ 2043 m</div>
+        <div class="poibtns">
+          <a class="btn btn-accent" href="day03/index.html">📋 Lista nézet</a>
+          <a class="btn btn-blue" href="https://www.google.com/maps/dir/Königssee/Hallstatt" target="_blank">🗺️ Navigáció</a>
+          <a class="btn btn-calimoto" href="https://calimoto.com/calimotour/sasfész-3.-nap-r-DON7nAc9fv" target="_blank">🏍️ Calimoto</a>
+          <a class="btn btn-download" href="Sasfészek 2026 POI pontok gpx/Sasfész 3. nap.gpx" download>⬇️ GPX Letöltés</a>
+        </div>
+      </div>
+      <div class="poi-right">
+        <img src="images/day03/01_kehlsteinhaus_sasfeszek_parkolo.jpg" alt="Day 03">
       </div>
     </div>
-    <div class="poi-right">
-      <img src="images/day03/01_kehlsteinhaus_sasfeszek_parkolo.jpg" alt="Day 03">
-    </div>
-  </div>
 
-  <div class="poi poi-withimg">
-    <div class="poi-left">
-      <div class="poi-title">DAY 04 – Hazatérés</div>
-      <div class="coords">Hallstatt → Velence. Hosszú túra hágókkal és búcsú az Alpoktól.</div>
-      <div class="day-metrics">📏 494 km | ⛰️ 4232 m | 📉 4624 m</div>
-      <div class="poibtns">
-        <a class="btn btn-accent" href="day04/index.html">📋 Lista</a>
-        <a class="btn btn-blue" href="https://www.google.com/maps" target="_blank">🗺️ Navigáció</a>
-        <a class="btn btn-calimoto" href="https://calimoto.com/calimotour/sasfész-4.-nap-r-I3LoYJ2X6o" target="_blank">🏍️ Calimoto</a>
-        <a class="btn btn-download" href="Sasfészek 2026 POI pontok gpx/Sasfész 4. nap.gpx" download>⬇️ GPX Letöltés</a>
+    <div class="poi poi-withimg">
+      <div class="poi-left">
+        <div class="poi-title">DAY 04 – Hazatérés</div>
+        <div class="coords">Hallstatt → Velence. Hosszú hágókkal teli szakasz, búcsú az osztrák hegyektől.</div>
+        <div class="day-metrics">📍 494 km | ▲ 4232 m | ▼ 4624 m</div>
+        <div class="poibtns">
+          <a class="btn btn-accent" href="day04/index.html">📋 Lista nézet</a>
+          <a class="btn btn-blue" href="https://www.google.com/maps/dir/Hallstatt/Velence" target="_blank">🗺️ Navigáció</a>
+          <a class="btn btn-calimoto" href="https://calimoto.com/calimotour/sasfész-4.-nap-r-I3LoYJ2X6o" target="_blank">🏍️ Calimoto</a>
+          <a class="btn btn-download" href="Sasfészek 2026 POI pontok gpx/Sasfész 4. nap.gpx" download>⬇️ GPX Letöltés</a>
+        </div>
       </div>
-    </div>
-    <div class="poi-right">
-      <img src="images/day04/01_koppen_hago_koppenpass.jpg" alt="Day 04">
+      <div class="poi-right">
+        <img src="images/day04/01_koppen_hago_koppenpass.jpg" alt="Day 04">
+      </div>
     </div>
   </div>
 
   <div class="tourmap-card">
-    <h3 style="margin-top:0">Főtérkép</h3>
+    <h3 style="margin-top:0; color:#ffca28;">Túra Főtérkép</h3>
     <div class="tourmap-wrap">
       <img class="tourmap-img" id="tourmapImg" src="assets/főtérkép.jpg" alt="Sasfészek túra főtérkép">
-      <div class="tourmap-me" id="tourmapMe"></div>
+      <div class="tourmap-me" id="tourmapMe" aria-hidden="true"></div>
+    </div>
+    <div id="gpsNoticeTourMap" style="display:none; font-size: 0.8rem; margin-top:10px; opacity:0.7;">
+      Helymeghatározás nem elérhető.
     </div>
   </div>
-
 </div>
 
 <script>
-  // A térkép JavaScript kódja ugyanaz maradt, mint amit korábban használtál, 
-  // mert az kiválóan működik minden eszközön.
-  (function(){
-    "use strict";
-    var IMG = document.getElementById("tourmapImg");
-    var ME  = document.getElementById("tourmapMe");
-    if(!IMG || !ME) return;
+(function(){
+  "use strict";
 
-    var BIL_LAT = [48.4872609244604, -0.0002417112619031477, -0.002917508120451087, 0.000000617931650058634];
-    var BIL_LON = [12.810311386166, 0.003223225199525508, 0.00007270051175614475, -0.00000009969934476170338];
+  var IMG = document.getElementById("tourmapImg");
+  var ME  = document.getElementById("tourmapMe");
+  if(!IMG || !ME) return;
 
-    function placeMe(lat, lon){
-      var natW = IMG.naturalWidth;
-      var natH = IMG.naturalHeight;
-      if(!natW || !natH) return;
-      // Egyszerűsített elhelyezés a szemléltetéshez
-      var xPerc = 50; // Itt a te xyFromLatLon függvényedet használd!
-      var yPerc = 50; 
-      ME.style.left = xPerc + "%";
-      ME.style.top  = yPerc + "%";
-      ME.style.display = "block";
+  // Bilineáris pontok a te eredeti számításaid alapján
+  var BIL_LAT = [48.4872609244604, -0.0002417112619031477, -0.002917508120451087, 0.000000617931650058634];
+  var BIL_LON = [12.810311386166, 0.003223225199525508, 0.00007270051175614475, -0.00000009969934476170338];
+  var AFF_LAT = [48.34777751743023, -0.0000007680095696837533, -0.002498706613987144];
+  var AFF_LON = [12.83281614746863, 0.003184350536963412, 0.000005129550184807137];
+
+  function latlonFromXY(x,y){
+    return { 
+      lat: BIL_LAT[0] + BIL_LAT[1]*x + BIL_LAT[2]*y + BIL_LAT[3]*x*y, 
+      lon: BIL_LON[0] + BIL_LON[1]*x + BIL_LON[2]*y + BIL_LON[3]*x*y 
+    };
+  }
+
+  function xyFromLatLon(lat,lon){
+    var la0=AFF_LAT[0], la1=AFF_LAT[1], la2=AFF_LAT[2];
+    var lo0=AFF_LON[0], lo1=AFF_LON[1], lo2=AFF_LON[2];
+    var det = la1*lo2 - la2*lo1;
+    var x=0, y=0;
+    if(Math.abs(det) > 1e-14){
+      var v0 = lat - la0, v1 = lon - lo0;
+      x = (lo2/det)*v0 + (-la2/det)*v1;
+      y = (-lo1/det)*v0 + (la1/det)*v1;
     }
+    for(var i=0;i<10;i++){
+      var cur = latlonFromXY(x,y);
+      var F0 = cur.lat - lat; var F1 = cur.lon - lon;
+      if(Math.sqrt(F0*F0 + F1*F1) < 1e-8) break;
+      var dlat_dx = BIL_LAT[1] + BIL_LAT[3]*y;
+      var dlat_dy = BIL_LAT[2] + BIL_LAT[3]*x;
+      var dlon_dx = BIL_LON[1] + BIL_LON[3]*y;
+      var dlon_dy = BIL_LON[2] + BIL_LON[3]*x;
+      var Jdet = dlat_dx*dlon_dy - dlat_dy*dlon_dx;
+      if(Math.abs(Jdet) < 1e-14) break;
+      x += (-F0*dlon_dy + F1*dlat_dy) / Jdet;
+      y += ( F0*dlon_dx - F1*dlat_dx) / Jdet;
+    }
+    return {x:x, y:y};
+  }
 
-    navigator.geolocation.getCurrentPosition(function(p){
-      placeMe(p.coords.latitude, p.coords.longitude);
-    });
-  })();
+  function placeMe(lat, lon){
+    var natW = IMG.naturalWidth;
+    var natH = IMG.naturalHeight;
+    if(!natW || !natH) return;
+    var xy = xyFromLatLon(lat, lon);
+    ME.style.left = (xy.x / natW * 100).toFixed(4) + "%";
+    ME.style.top  = (xy.y / natH * 100).toFixed(4) + "%";
+    ME.style.display = "block";
+  }
+
+  function start(){
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(function(p){
+        placeMe(p.coords.latitude, p.coords.longitude);
+      }, null, { enableHighAccuracy:true });
+    }
+  }
+
+  if(IMG.complete) start(); else IMG.addEventListener("load", start);
+})();
 </script>
 
 </body>
