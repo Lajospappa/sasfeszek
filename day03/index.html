@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hu">
 
 <head>
@@ -29,7 +29,13 @@
     .poi-numbered-icon svg {
       display: block;
     }
-  </style>
+  
+  .poi.poi-target{
+    outline: 3px solid rgba(255,45,45,0.85);
+    outline-offset: 4px;
+    border-radius: 14px;
+  }
+</style>
   <!-- Leaflet (térkép) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -51,7 +57,7 @@
         </div>
         <div class="btnrow">
           <a class="btn" href="../index.html">🏠 Főoldal</a>
-          <button class="btn btn-accent" id="btnNearest">📌 Legközelebbi pont</button>
+          <button type="button" class="btn btn-accent btn-measure" id="btnNearest">📌 Legközelebbi pont</button>
         </div>
       </div>
     </div>
@@ -372,6 +378,241 @@ var gpxUrlRaw = "../Sasfészek 2026 POI pontok gpx/Sasfész 3. nap.gpx";
       }
     })();
   </script>
+  <!-- SASFESZEK_AUTO_MEASURE_START -->
+  <script>
+  (function () {
+    "use strict";
+
+    var DAY_ID = "sasfeszek:day03";
+    var t2 = null;
+    var sample1 = null;
+
+    function showNotice(show) {
+      var n = document.getElementById("gpsNotice");
+      if (!n) return;
+      n.style.display = show ? "block" : "none";
+    }
+
+    function collectPoisFromDom() {
+      var out = [];
+      document.querySelectorAll(".poi").forEach(function (poi) {
+        var id = poi.id;
+        var c = poi.querySelector(".coords");
+        if (!id || !c) return;
+
+        var m = (c.textContent || "").trim().match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
+        if (!m) return;
+
+        var lat = parseFloat(m[1]);
+        var lon = parseFloat(m[2]);
+        if (!isFinite(lat) || !isFinite(lon)) return;
+
+        out.push({ id: id, lat: lat, lon: lon });
+      });
+      return out;
+    }
+
+    function setDot(id, cls) {
+      var dot = document.querySelector('[data-dot="' + id + '"]');
+      if (!dot) return;
+      dot.classList.remove("ok", "warn", "bad");
+      dot.classList.add(cls);
+    }
+
+    function setBadgeText(id, txt) {
+      var el = document.querySelector('[data-badgetext="' + id + '"]');
+      if (el) el.textContent = "mérés: " + txt;
+    }
+
+    function setDistText(id, meters) {
+      var el = document.querySelector('[data-dist="' + id + '"]');
+      if (!el) return;
+      var s = (typeof fmtMeters === "function")
+        ? fmtMeters(meters)
+        : (meters >= 1000 ? (meters/1000).toFixed(2) + " km" : Math.round(meters) + " m");
+      el.textContent = "távolság: " + s;
+    }
+
+    function scrollToPoi(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+
+      try {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      } catch (e) {
+        el.scrollIntoView(true);
+      }
+
+      el.classList.add("poi-target");
+      setTimeout(function () { el.classList.remove("poi-target"); }, 1200);
+    }
+
+    function getPosOnce() {
+      if (typeof getPos === "function") return getPos(); // gps.js
+      return new Promise(function (resolve, reject) {
+        if (!navigator.geolocation) return reject(new Error("no geo"));
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 12000,
+          maximumAge: 0
+        });
+      });
+    }
+
+    function hvMeters(lat1, lon1, lat2, lon2) {
+      if (typeof haversineMeters === "function") return haversineMeters(lat1, lon1, lat2, lon2); // gps.js
+      var R = 6371000;
+      var dLat = (lat2 - lat1) * Math.PI / 180;
+      var dLon = (lon2 - lon1) * Math.PI / 180;
+      var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function keyFor(poiId) {
+      if (typeof storageKey === "function") return storageKey(DAY_ID, poiId); // gps.js
+      return "kekduna:" + DAY_ID + ":poi:" + poiId + ":lastDist";
+    }
+
+    function indFrom(delta) {
+      if (typeof indicatorFromDelta === "function") return indicatorFromDelta(delta); // gps.js
+      if (!isFinite(delta)) return { cls: "warn", text: "nincs előzmény" };
+      if (Math.abs(delta) < 15) return { cls: "warn", text: "kb ugyanott" };
+      if (delta < 0) return { cls: "ok", text: "közeledsz" };
+      return { cls: "bad", text: "távolodsz, elhagytad" };
+    }
+
+    function applyIndicator(id, ind) {
+      setDot(id, (ind && ind.cls) ? ind.cls : "warn");
+      setBadgeText(id, (ind && ind.text) ? ind.text : "mérve");
+    }
+
+    async function measureAllOnce(pois) {
+      pois.forEach(function (p) {
+        setDot(p.id, "warn");
+        setBadgeText(p.id, "mérés...");
+      });
+
+      // 1 db GPS kerés ciklusonként
+      var pos = await getPosOnce();
+      var lat = pos.coords.latitude;
+      var lon = pos.coords.longitude;
+
+      var distById = {};
+      for (var i = 0; i < pois.length; i++) {
+        var p = pois[i];
+        var dist = hvMeters(lat, lon, p.lat, p.lon);
+
+        var key = keyFor(p.id);
+        var prev = parseFloat(localStorage.getItem(key));
+        localStorage.setItem(key, String(dist));
+
+        var delta = (isFinite(prev) ? (dist - prev) : NaN);
+        var ind = indFrom(delta);
+
+        distById[p.id] = dist;
+        setDistText(p.id, dist);
+        applyIndicator(p.id, ind);
+      }
+
+      return { lat: lat, lon: lon, distById: distById };
+    }
+
+    function nearestId(distById) {
+      var best = null, bestD = Infinity;
+      for (var id in distById) {
+        var d = distById[id];
+        if (d < bestD) { bestD = d; best = id; }
+      }
+      return best;
+    }
+
+    function pickTarget(s1, s2) {
+      if (!s1 || !s2) return null;
+
+      var moveM = hvMeters(s1.lat, s1.lon, s2.lat, s2.lon);
+      if (!isFinite(moveM) || moveM < 30) return nearestId(s2.distById);
+
+      var bestId = null, bestScore = -Infinity, bestDist = Infinity;
+      for (var id2 in s2.distById) {
+        var d2 = s2.distById[id2];
+        var d1 = s1.distById[id2];
+        var score = (isFinite(d1) && isFinite(d2)) ? (d1 - d2) : 0; // pozitiv: kozeledes
+
+        if (score > bestScore + 1e-9) {
+          bestScore = score; bestId = id2; bestDist = d2;
+        } else if (Math.abs(score - bestScore) < 1e-9 && d2 < bestDist) {
+          bestId = id2; bestDist = d2;
+        }
+      }
+      return bestId;
+    }
+
+    async function runMeasureCycle(scrollAfter) {
+      if (t2) { clearTimeout(t2); t2 = null; }
+      showNotice(false);
+
+      var pois = collectPoisFromDom();
+      if (!pois.length) return;
+
+      try {
+        var s1 = await measureAllOnce(pois);
+        sample1 = s1;
+
+        if (scrollAfter) {
+          var n1 = nearestId(s1.distById);
+          if (n1) scrollToPoi(n1);
+        }
+
+        t2 = setTimeout(async function () {
+          try {
+            var s2 = await measureAllOnce(pois);
+            var target = pickTarget(sample1, s2);
+            if (target) scrollToPoi(target);
+          } catch (e2) {
+            showNotice(true);
+          }
+        }, 5000);
+
+      } catch (e) {
+        showNotice(true);
+      }
+    }
+
+    // indul oldalnyitasra
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () { runMeasureCycle(true); });
+    } else {
+      runMeasureCycle(true);
+    }
+
+    // gomb: ujrameres
+    var btn = document.getElementById("btnNearest");
+    if (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var old = btn.textContent;
+        btn.classList.add("active");
+        btn.textContent = "⏱ mérés...";
+
+        Promise.resolve(runMeasureCycle(true))
+          .catch(function(){})
+          .finally(function(){
+            btn.textContent = old;
+            btn.classList.remove("active");
+          });
+      });
+    }
+  })();
+  </script>
+  <!-- SASFESZEK_AUTO_MEASURE_END -->
 </body>
 
 </html>
+
+
+
