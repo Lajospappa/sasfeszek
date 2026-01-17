@@ -1,0 +1,479 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY02 lista nézet</title>
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- Leaflet -->
+  <!-- DAY02 háttér -->
+  <style>
+    body.day02 {
+      background: url("../images/day02/01_praebichl_hago.jpg") center / cover no-repeat fixed;
+    }
+
+    /* szövegdoboz háttér picit sötétebb */
+    .card {
+      background: rgba(0, 0, 0, 0.72);
+    }
+
+    /* --- SZÁMOZOTT KÉK POI JELÖLŐ --- */
+    .poi-numbered-icon {
+      background: transparent;
+      border: none;
+    }
+
+    .poi-numbered-icon svg {
+      display: block;
+    }
+  </style>
+  <!-- Leaflet (térkép) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Leaflet GPX plugin (ha később kell) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
+  <script src="../assets/js/gps.js"></script>
+</head>
+
+<body class="day02">
+  <div class="page">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="inner">
+        <div class="brand">
+          <div class="title">Sasfészek túra</div>
+          <div class="subtitle">DAY02 lista nézet</div>
+        </div>
+        <div class="btnrow">
+          <a class="btn" href="../index.html">🏠 Főoldal</a>
+          <button class="btn btn-accent" id="btnNearest">📌 Legközelebbi pont</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container">
+
+      <div class="card">
+        <div class="h1">DAY02 – Bruck an der Mur → Königssee</div>
+        <div class="small">
+          A mérés automatikusan indul oldalnyitáskor, majd 5 mp múlva frissít.
+          A távolságok minden célpontnál frissülnek, és az oldal a legvalószínűbb következő pontra ugrik.
+        </div>
+        <div class="notice" id="gpsNotice" style="display:none">
+          A böngésző nem tudott helyet kérni. Ellenőrizd a helymeghatározási engedélyt (Telefon: beállítások → Böngésző
+          → Hely).
+        </div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="grid" id="poiList">
+
+        <!-- P1 -->
+        <div class="poi" id="p1">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">1. Präbichl-hágó</div>
+              <div class="coords">47.521045, 14.954738</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p1"></span><span data-badgetext="p1">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p1">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">1226 méter magas hágó a Hochschwab és az Eisenerzi-Alpok között. Az útvonal (B115) technikás szerpentinekkel kapaszkodik fel a hágóra.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p1.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.521045,14.954738" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/01_praebichl_hago.jpg" alt="Präbichl-hágó">
+        </div>
+
+        <!-- P2 -->
+        <div class="poi" id="p2">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">2. Erzberg (A Vas-hegy)</div>
+              <div class="coords">47.538139559771366, 14.926539360931969</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p2"></span><span data-badgetext="p2">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p2">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">Közép-Európa legnagyobb külszíni vasércbányája, a lépcsőzetes teraszok a B115-ös út mellől is láthatók.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p2.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.538139559771366,14.926539360931969" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/02_erzberg_vas_hegy.jpg" alt="Erzberg (A Vas-hegy)">
+        </div>
+
+        <!-- P3 -->
+        <div class="poi" id="p3">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">3. Hengst-hágó (Hengstpaß)</div>
+              <div class="coords">47.70183938964735, 14.460694831334223</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p3"></span><span data-badgetext="p3">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p3">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">985 méter magas, csendes, erdős hágóút (L550) a Kalkalpen Nemzeti Park térségében, kanyargós aszfaltcsíkkal.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p3.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.70183938964735,14.460694831334223" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/03_hengst_hago_hengstpass.jpg" alt="Hengst-hágó (Hengstpaß)">
+        </div>
+
+        <!-- P4 -->
+        <div class="poi" id="p4">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">4. Traunsee és Seeschloss Ort (Gmunden)</div>
+              <div class="coords">47.91678324968555, 13.796486031357546</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p4"></span><span data-badgetext="p4">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p4">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">Ausztria legmélyebb tava (191 m), amelynek északi partját érinti az útvonal. Gmunden jelképe a hídon megközelíthető Ort kastély.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p4.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.91678324968555,13.796486031357546" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/04_traunsee_seeschloss_ort_gmunden.jpg" alt="Traunsee és Seeschloss Ort (Gmunden)">
+        </div>
+
+        <!-- P5 -->
+        <div class="poi" id="p5">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">5. Großalmstraße</div>
+              <div class="coords">47.84872929950052, 13.659273879779022</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p5"></span><span data-badgetext="p5">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p5">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">Ritkán lakott hegyi szerpentin (L544), amely a Traunsee-t köti össze az Attersee-vel, erdőkben és hegyi íveken vezet.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p5.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.84872929950052,13.659273879779022" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/05_grossalmstrasse.jpg" alt="Großalmstraße">
+        </div>
+
+        <!-- P6 -->
+        <div class="poi" id="p6">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">6. Attersee</div>
+              <div class="coords">47.82099905016881, 13.547481990326986</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p6"></span><span data-badgetext="p6">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p6">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">A Salzkammergut legnagyobb felületű tava, amelynek partján a motorozható út hosszú szakaszon közvetlenül a víz mellett fut.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p6.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.82099905016881,13.547481990326986" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/06_attersee_keleti_part.jpg" alt="Attersee">
+        </div>
+
+        <!-- P7 -->
+        <div class="poi" id="p7">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">7. Mondsee</div>
+              <div class="coords">47.806036, 13.439962</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p7"></span><span data-badgetext="p7">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p7">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">Tó és település a Salzkammergut peremén, Salzburg térsége felé.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p7.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.806036,13.439962" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/07_mondsee.jpg" alt="Mondsee">
+        </div>
+
+        <!-- P8 -->
+        <div class="poi" id="p8">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">8. Rossfeld Panorama Straße</div>
+              <div class="coords">47.628433, 13.09446</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p8"></span><span data-badgetext="p8">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p8">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">Panorámaút Berchtesgaden térségében, magashegyi kilátásokkal.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p8.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.628433,13.09446" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/08_rossfeld_panorama_strasse.jpg" alt="Rossfeld Panorama Straße">
+        </div>
+
+        <!-- P8A -->
+        <div class="poi" id="p8a">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">8a. Hitler eredeti bunkere</div>
+              <div class="coords">47.633827, 13.042848</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p8a"></span><span data-badgetext="p8a">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p8a">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">Obersalzberg környéki történelmi helyszín, a náci vezetés hegyi központjához kapcsolódó objektum.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p8a.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.633827,13.042848" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+        </div>
+
+        <!-- P9 -->
+        <div class="poi" id="p9">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">9. Berchtesgaden és a Watzmann</div>
+              <div class="coords">47.63035719082362, 13.005815521006923</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p9"></span><span data-badgetext="p9">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p9">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">A Bajor-Alpok szíve, Németország egyik legimpozánsabb hegyi katlanja, amelyet a Watzmann 2713 méteres csúcsa ural.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p9.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.63035719082362,13.005815521006923" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/09_berchtesgaden_watzmann.jpg" alt="Berchtesgaden és a Watzmann">
+        </div>
+
+        <!-- P10 -->
+        <div class="poi" id="p10">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">10. Königssee</div>
+              <div class="coords">47.59485, 12.986016</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p10"></span><span data-badgetext="p10">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p10">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">Smaragdzöld vizű, fjord-szerű alpesi tó meredek sziklafalak között. A napi szakasz végpontja.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p10.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.59485,12.986016" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/10_koenigssee.jpg" alt="Königssee">
+        </div>
+
+        <!-- P11 -->
+        <div class="poi" id="p11">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">11. Camping Grafenlehen (Königssee)</div>
+              <div class="coords">47.59485, 12.986016</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p11"></span><span data-badgetext="p11">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p11">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">Erdős, folyóparti kemping kb. 5 perc sétára a Königssee-től, Watzmann és Jenner panorámával. 2020-ban felújított vizesblokkok, kisbolt, téli kempingezés és 6 elektromos autó töltő.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p11.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.59485,12.986016" target="_blank" rel="noopener">🧭 Navigáció</a>
+          </div>
+
+          <img class="inline-image" src="../images/day02/11Grafenlehen.png" alt="Camping Grafenlehen (Königssee)">
+        </div>
+
+      </div>
+
+      <!-- TÉRKÉP AZ OLDAL ALJÁN -->
+      <div style="height:16px"></div>
+      <div class="card">
+        <div class="h1">Térkép</div>
+        <div id="map" style="width:100%; height:360px; border-radius:12px;"></div>
+      </div>
+
+    </div>
+  </div>
+  <script>
+  /* global L */
+  (function(){
+    "use strict";
+
+    var el = document.getElementById("map");
+    if(!el){ return; }
+
+    // Alaptérkép
+    var map = L.map("map", { scrollWheelZoom: true });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap"
+    }).addTo(map);
+
+    // POI-k kigyűjtése a listából
+    var poiEls = document.querySelectorAll(".poi");
+    var pts = [];
+    poiEls.forEach(function(poi){
+      var c = poi.querySelector(".coords");
+      var t = poi.querySelector(".poi-title");
+      if(!c){ return; }
+      var txt = (c.textContent || "").trim();
+
+      // várjuk: "47.123, 15.456" vagy "47.123,15.456"
+      var m = txt.match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
+      if(!m){ return; }
+
+      var lat = parseFloat(m[1]);
+      var lon = parseFloat(m[2]);
+      if(!isFinite(lat) || !isFinite(lon)){ return; }
+
+      var name = t ? (t.textContent || "").trim() : "";
+      var marker = L.marker([lat, lon]).addTo(map);
+      if(name){ marker.bindPopup(name); }
+      pts.push([lat, lon]);
+    });
+
+    // Kezdő nézet
+    if(pts.length){
+      map.fitBounds(pts, { padding:[18,18] });
+    } else {
+      map.setView([47.0, 14.0], 7);
+    }
+  
+    // --- AKTUÁLIS POZÍCIÓ (PIROS) ---
+    var meDot = null;
+    var meAcc = null;
+    var didCenter = false;
+
+    function setMe(lat, lon, acc){
+      var ll = [lat, lon];
+
+      if(!meDot){
+        meDot = L.circleMarker(ll, {
+          radius: 7,
+          color: "#ff2d2d",
+          weight: 3,
+          fillColor: "#ff2d2d",
+          fillOpacity: 0.9
+        }).addTo(map).bindPopup("Aktuális pozíció");
+
+        meAcc = L.circle(ll, {
+          radius: Math.max(10, acc || 0),
+          color: "#ff2d2d",
+          weight: 1,
+          fillColor: "#ff2d2d",
+          fillOpacity: 0.12
+        }).addTo(map);
+
+        if(!didCenter){
+          // első fix: középre teszi, de nem rombolja szét a fitBounds-ot
+          try { map.setView(ll, Math.min(14, map.getZoom() || 14)); } catch(e){}
+          didCenter = true;
+        }
+      } else {
+        meDot.setLatLng(ll);
+        meAcc.setLatLng(ll);
+        if(acc && isFinite(acc)){
+          meAcc.setRadius(Math.max(10, acc));
+        }
+      }
+    }
+
+    if(navigator.geolocation){
+      navigator.geolocation.watchPosition(function(pos){
+        var c = pos && pos.coords ? pos.coords : null;
+        if(!c){ return; }
+        setMe(c.latitude, c.longitude, c.accuracy);
+      }, function(err){
+        // csendben hagyjuk (engedély/hiba)
+      }, {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 12000
+      });
+    }
+})();
+  </script>
+</body>
+
+</html>
+
+
+
