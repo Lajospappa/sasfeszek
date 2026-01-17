@@ -1,0 +1,350 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY04 lista nézet</title>
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- Leaflet -->
+  <!-- DAY04 háttér -->
+  <style>
+    body.day04 {
+      background: url("../images/day04/01_koppen_hago_koppenpass.jpg") center / cover no-repeat fixed;
+    }
+
+    /* szövegdoboz háttér picit sötétebb */
+    .card {
+      background: rgba(0, 0, 0, 0.72);
+    }
+
+    /* --- SZÁMOZOTT KÉK POI JELÖLŐ --- */
+    .poi-numbered-icon {
+      background: transparent;
+      border: none;
+    }
+
+    .poi-numbered-icon svg {
+      display: block;
+    }
+  </style>
+  <!-- Leaflet (térkép) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Leaflet GPX plugin (ha később kell) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
+  <script src="../assets/js/gps.js"></script>
+</head>
+
+<body class="day04">
+  <div class="page">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="inner">
+        <div class="brand">
+          <div class="title">Sasfészek túra</div>
+          <div class="subtitle">DAY04 lista nézet</div>
+        </div>
+        <div class="btnrow">
+          <a class="btn" href="../index.html">🏠 Főoldal</a>
+          <button class="btn btn-accent" id="btnNearest">📌 Legközelebbi pont</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container">
+
+      <div class="card">
+        <div class="h1">DAY04 – Hallstatt → Velence</div>
+        <div class="small">
+          A mérés automatikusan indul oldalnyitáskor, majd 5 mp múlva frissít.
+          A távolságok minden célpontnál frissülnek, és az oldal a legvalószínűbb következő pontra ugrik.
+        </div>
+        <div class="notice" id="gpsNotice" style="display:none">
+          A böngésző nem tudott helyet kérni. Ellenőrizd a helymeghatározási engedélyt (Telefon: beállítások → Böngésző
+          → Hely).
+        </div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="grid" id="poiList">
+        
+        <!-- P1 -->
+        <div class="poi" id="p1">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">1. Koppen-hágó (Koppenpass)</div>
+              <div class="coords">47.5627, 13.714947</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p1"></span><span data-badgetext="p1">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p1">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">690 méter magas hágó a Hallstatti-tó és Bad Aussee között, a Traun szurdokvölgyében vezet.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p1.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/search/?api=1&amp;query=47.5627,13.714947" target="_blank" rel="noopener">🧭 Navigáció</a>
+</div>
+          
+
+          <img class="inline-image" src="../images/day04/01_koppen_hago_koppenpass.jpg" alt="Koppen-hágó (Koppenpass)">
+
+        </div>
+
+        <!-- P2 -->
+        <div class="poi" id="p2">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">2. Sölk-hágó (Sölkpass)</div>
+              <div class="coords">47.265481, 14.075412</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p2"></span><span data-badgetext="p2">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p2">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">1788 méter magas, érintetlen karakterű hágó az Alacsony-Tauernben, vadregényes alpesi környezetben.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p2.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/search/?api=1&amp;query=47.265481,14.075412" target="_blank" rel="noopener">🧭 Navigáció</a>
+</div>
+          
+
+          <img class="inline-image" src="../images/day04/02_soelk_hago_soelkpass.jpg" alt="Sölk-hágó (Sölkpass)">
+
+        </div>
+
+        <!-- P3 -->
+        <div class="poi" id="p3">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">3. Oberwölz (A legkisebb osztrák város)</div>
+              <div class="coords">47.202345, 14.281023</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p3"></span><span data-badgetext="p3">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p3">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">Stájerország legkisebb városa, középkori városfallal és városkapukkal, az útvonal közvetlen közelében.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p3.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/search/?api=1&amp;query=47.202345,14.281023" target="_blank" rel="noopener">🧭 Navigáció</a>
+</div>
+          
+
+          <img class="inline-image" src="../images/day04/03_oberwoelz.jpg" alt="Oberwölz (A legkisebb osztrák város)">
+
+        </div>
+
+        <!-- P4 -->
+        <div class="poi" id="p4">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">4. Judenburg</div>
+              <div class="coords">47.168902, 14.660724</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p4"></span><span data-badgetext="p4">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p4">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">A Mura-völgy történelmi kereskedelmi központja, jelképe a 75 méter magas Stadtturm.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p4.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/search/?api=1&amp;query=47.168902,14.660724" target="_blank" rel="noopener">🧭 Navigáció</a>
+</div>
+          
+
+          <img class="inline-image" src="../images/day04/04_judenburg.jpg" alt="Judenburg">
+
+        </div>
+
+        <!-- P5 -->
+        <div class="poi" id="p5">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">5. Gaberl-hágó</div>
+              <div class="coords">47.108456, 14.916847</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p5"></span><span data-badgetext="p5">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p5">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">1547 méter magas hágó a Stubalpe vonulatában, széles, jól belátható kanyarokkal.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p5.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/search/?api=1&amp;query=47.108456,14.916847" target="_blank" rel="noopener">🧭 Navigáció</a>
+</div>
+          
+
+          <img class="inline-image" src="../images/day04/05_gaberl_hago.jpg" alt="Gaberl-hágó">
+
+        </div>
+
+        <!-- P6 -->
+        <div class="poi" id="p6">
+          <div class="poi-head">
+            <div>
+              <div class="poi-title">6. Lipizzanerheimat (Köflach, Piber)</div>
+              <div class="coords">47.069412, 15.054321</div>
+            </div>
+            <div class="badges">
+              <span class="badge"><span class="dot warn" data-dot="p6"></span><span data-badgetext="p6">mérés:
+                  várakozás</span></span>
+              <span class="badge"><span class="dot warn"></span><span data-dist="p6">távolság: —</span></span>
+            </div>
+          </div>
+
+          <div class="p">A lipicai tenyésztés osztrák központja Piber térségében, Köflach mellett halad el az útvonal.</div>
+
+          <div class="poibtns">
+            <a class="btn btn-accent" href="p6.html">Részletek</a>
+            <a class="btn btn-blue" href="https://www.google.com/maps/search/?api=1&amp;query=47.069412,15.054321" target="_blank" rel="noopener">🧭 Navigáció</a>
+</div>
+          
+
+          <img class="inline-image" src="../images/day04/06_lipizzanerheimat_koflach_piber.jpg" alt="Lipizzanerheimat (Köflach, Piber)">
+
+        </div>
+
+      </div>
+
+      <!-- TÉRKÉP AZ OLDAL ALJÁN -->
+      <div style="height:16px"></div>
+      <div class="card">
+        <div class="h1">Térkép</div>
+        <div id="map" style="width:100%; height:360px; border-radius:12px;"></div>
+      </div>
+
+    </div>
+  </div>
+  <script>
+  /* global L */
+  (function(){
+    "use strict";
+
+    var el = document.getElementById("map");
+    if(!el){ return; }
+
+    // Alaptérkép
+    var map = L.map("map", { scrollWheelZoom: true });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap"
+    }).addTo(map);
+
+    // POI-k kigyűjtése a listából
+    var poiEls = document.querySelectorAll(".poi");
+    var pts = [];
+    poiEls.forEach(function(poi){
+      var c = poi.querySelector(".coords");
+      var t = poi.querySelector(".poi-title");
+      if(!c){ return; }
+      var txt = (c.textContent || "").trim();
+
+      // várjuk: "47.123, 15.456" vagy "47.123,15.456"
+      var m = txt.match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
+      if(!m){ return; }
+
+      var lat = parseFloat(m[1]);
+      var lon = parseFloat(m[2]);
+      if(!isFinite(lat) || !isFinite(lon)){ return; }
+
+      var name = t ? (t.textContent || "").trim() : "";
+      var marker = L.marker([lat, lon]).addTo(map);
+      if(name){ marker.bindPopup(name); }
+      pts.push([lat, lon]);
+    });
+
+    // Kezdő nézet
+    if(pts.length){
+      map.fitBounds(pts, { padding:[18,18] });
+    } else {
+      map.setView([47.0, 14.0], 7);
+    }
+  
+    // --- AKTUÁLIS POZÍCIÓ (PIROS) ---
+    var meDot = null;
+    var meAcc = null;
+    var didCenter = false;
+
+    function setMe(lat, lon, acc){
+      var ll = [lat, lon];
+
+      if(!meDot){
+        meDot = L.circleMarker(ll, {
+          radius: 7,
+          color: "#ff2d2d",
+          weight: 3,
+          fillColor: "#ff2d2d",
+          fillOpacity: 0.9
+        }).addTo(map).bindPopup("Aktuális pozíció");
+
+        meAcc = L.circle(ll, {
+          radius: Math.max(10, acc || 0),
+          color: "#ff2d2d",
+          weight: 1,
+          fillColor: "#ff2d2d",
+          fillOpacity: 0.12
+        }).addTo(map);
+
+        if(!didCenter){
+          // első fix: középre teszi, de nem rombolja szét a fitBounds-ot
+          try { map.setView(ll, Math.min(14, map.getZoom() || 14)); } catch(e){}
+          didCenter = true;
+        }
+      } else {
+        meDot.setLatLng(ll);
+        meAcc.setLatLng(ll);
+        if(acc && isFinite(acc)){
+          meAcc.setRadius(Math.max(10, acc));
+        }
+      }
+    }
+
+    if(navigator.geolocation){
+      navigator.geolocation.watchPosition(function(pos){
+        var c = pos && pos.coords ? pos.coords : null;
+        if(!c){ return; }
+        setMe(c.latitude, c.longitude, c.accuracy);
+      }, function(err){
+        // csendben hagyjuk (engedély/hiba)
+      }, {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 12000
+      });
+    }
+})();
+  </script>
+</body>
+
+</html>
+
+
+
+
