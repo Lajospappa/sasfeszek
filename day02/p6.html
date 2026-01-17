@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY02 6. Attersee</title>
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- Leaflet -->
+  <!-- Háttérkép ugyanaz, mint a hero image -->
+  <style>
+    body {
+      background: url("../images/day02/06_attersee_keleti_part.jpg") center / cover no-repeat fixed;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="inner">
+        <div class="brand">
+          <div class="title">Sasfészek túra</div>
+          <div class="subtitle">DAY02 6. Attersee</div>
+        </div>
+        <div class="btnrow">
+          <a class="btn" href="../index.html">🏠 Főoldal</a>
+          <a class="btn" href="index.html">📋 Lista nézet</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container">
+      <div class="card">
+
+        <div class="h1">6. Attersee</div>
+        <div class="small">47.82099905016881, 13.547481990326986</div>
+
+        <!-- HERO IMAGE -->
+        <img class="hero-image" src="../images/day02/06_attersee_keleti_part.jpg" alt="Attersee">
+
+        <div class="p"><b>Attersee számok, ami miatt „nagy tóként” viselkedik</b> A tó felülete kb. 46 km², a maximális mélysége 170,6 m, az átlagmélysége 84,2 m. A térfogata kb. 3,94 km³, ez magyarul annyit jelent, hogy nem egy gyorsan átmelegedő, sekély üdülőtó, hanem lassú ritmusú, stabil víztömeg. A vízszintje kb. 469 m tengerszint felett van, a vízgyűjtője kb. 463,5 km².</div>
+
+        <div class="p"><b>Vízgyűjtő és „csatornázott” hidrológia</b> A fő befolyás a Seeache, a kifolyás az Ager. A rendszer azért érdekes, mert a víz nem csak helyben „áll”, hanem egy összekapcsolt vízrendszer része, ami továbbmegy a Traun irányába, és végül a Duna vízrendszerébe jut.</div>
+
+        <div class="p"><b>Megújulási idő, ami ritka egy ekkora fürdőtónál</b> A tó elméleti megújulási ideje kb. 7 év. Ez jó magyarázat arra, miért számít, mi történik a vízgyűjtőn: ami bekerül, az nem holnap távozik, hanem hosszú idő alatt keveredik és „dolgozódik fel”.</div>
+
+        <div class="p"><b>Vízminőség, ami nem reklámszöveg</b> Felső Ausztriában az Attersee-t a nagyon alacsony tápanyagterhelés és a nagy átlátszóság miatt referencia jellegű tónak tartják, a látótávolság jó időszakokban elérheti a 20 métert. Ez az a szám, ami miatt búváros terepként is külön kategória.</div>
+
+        <div class="p"><b>Miért türkiz, amikor nem „trópusi”?</b> A jellegzetes türkiz szín nem festék, hanem fizika és biológia: a szín kapcsolatban van a vízben megjelenő finom mész (kalcit) kiválással, ami a plankton algák életfolyamataihoz kötött. Emiatt a tó színe nem állandó, hanem időszakosan erősödhet.</div>
+
+        <div class="p"><b>Rosenwind, a tó „üzemi” szele</b> Az Attersee-n gyakran emlegetik a Rosenwindet, egy rendszeresen jelentkező, nyári derült időben kialakuló helyi termikus szelet. A névhez egy helyi magyarázat is tartozik: régen a Kammer környéki rózsakertek szirmait „vitte át” a szél a tavon, innen a rózsa utalás. A lényeg motoros szemmel is egyszerű: a tó nem csak panoráma, hanem saját időjárási gépezet.</div>
+
+        <div class="p"><b>UNESCO réteg a víz alatt</b> Kevés tó mondhatja el magáról, hogy a partja mentén több ezer éves, víz alá került településnyomok vannak. Az „Őskori cölöpépítmények az Alpok körül” UNESCO világörökségi helyszín részeként az Attersee-n több állomás is szerepel, és a kutatások alapján a tó környékén nagyon korai, újkőkori nyomok is vannak, egyes leletek kb. i. e. 3770 körüli időszakra utalnak. A külön érdekesség, hogy a tóban kb. 20–30 elsüllyedt cölöpépítményes lelőhelyet is említenek, és ezek közül több kiemelt védettségű.</div>
+
+        <div class="p"><b>Klimt, mint mérőműszer a tájhoz</b> A tó kulturális „adatpontja” Gustav Klimt. A források szerint az 1890-es évek végétől rendszeresen nyaralt az Attersee-nél, és 1900 és 1916 között kb. 40 tájképet készített a régióban. Ez azért érdekes, mert nem egy alkalmi képeslap ihlet volt, hanem sok éven át ismételt, dokumentált megfigyelés: ugyanaz a víz, más fény, más ritmus, más év.</div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="poibtns">
+          <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.82099905016881,13.547481990326986" target="_blank" rel="noopener">🧭 Navigáció</a>
+          <a class="btn btn-accent" href="index.html">📋 Lista nézet</a>
+        </div>
+
+        <div class="poibtns">
+          <a class="btn" href="../index.html">🏠 Főoldal</a>
+        </div>
+      
+        <!-- TTS CONTROLS -->
+        <div class="poibtns" id="tts-controls">
+          <a class="btn" href="#" id="ttsPlay">🔊 Felolvasás</a>
+          <a class="btn" href="#" id="ttsStop">⏹️ Megállítás</a>
+        </div>
+</div>
+    </div>
+
+  </div>
+  <script src="../assets/js/tts.js"></script>
+</body>
+
+</html>
+
