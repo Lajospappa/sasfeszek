@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hu">
 
 <head>
@@ -29,13 +29,22 @@
     .poi-numbered-icon svg {
       display: block;
     }
-  </style>
+  
+  .poi.poi-target{
+    outline: 3px solid rgba(255,45,45,0.85);
+    outline-offset: 4px;
+    border-radius: 14px;
+  }
+</style>
+
   <!-- Leaflet (térkép) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Leaflet GPX plugin (ha később kell) -->
+  <!-- Leaflet GPX plugin -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
+
+  <!-- GPS helper -->
   <script src="../assets/js/gps.js"></script>
 </head>
 
@@ -51,7 +60,7 @@
         </div>
         <div class="btnrow">
           <a class="btn" href="../index.html">🏠 Főoldal</a>
-          <button class="btn btn-accent" id="btnNearest">📌 Legközelebbi pont</button>
+          <button type="button" class="btn btn-accent btn-measure" id="btnNearest">📌 Legközelebbi pont</button>
         </div>
       </div>
     </div>
@@ -83,8 +92,7 @@
               <div class="coords">47.147311, 17.368018</div>
             </div>
             <div class="badges">
-              <span class="badge"><span class="dot warn" data-dot="p1"></span><span data-badgetext="p1">mérés:
-                  várakozás</span></span>
+              <span class="badge"><span class="dot warn" data-dot="p1"></span><span data-badgetext="p1">mérés: várakozás</span></span>
               <span class="badge"><span class="dot warn"></span><span data-dist="p1">távolság: —</span></span>
             </div>
           </div>
@@ -97,7 +105,6 @@
           </div>
 
           <img class="inline-image" src="../images/day01/01_somlo_tanuhegy.jpg" alt="Somló (A magányos tanúhegy)">
-
         </div>
 
         <!-- P2 -->
@@ -108,8 +115,7 @@
               <div class="coords">47.44822080893985, 15.621515009504265</div>
             </div>
             <div class="badges">
-              <span class="badge"><span class="dot warn" data-dot="p2"></span><span data-badgetext="p2">mérés:
-                  várakozás</span></span>
+              <span class="badge"><span class="dot warn" data-dot="p2"></span><span data-badgetext="p2">mérés: várakozás</span></span>
               <span class="badge"><span class="dot warn"></span><span data-dist="p2">távolság: —</span></span>
             </div>
           </div>
@@ -122,7 +128,6 @@
           </div>
 
           <img class="inline-image" src="../images/day01/03_feistritzsattel_feistritz_hago.jpg" alt="Feistritzsattel (Feistritz-hágó)">
-
         </div>
 
         <!-- P3 -->
@@ -133,8 +138,7 @@
               <div class="coords">47.402611, 15.227256</div>
             </div>
             <div class="badges">
-              <span class="badge"><span class="dot warn" data-dot="p3"></span><span data-badgetext="p3">mérés:
-                  várakozás</span></span>
+              <span class="badge"><span class="dot warn" data-dot="p3"></span><span data-badgetext="p3">mérés: várakozás</span></span>
               <span class="badge"><span class="dot warn"></span><span data-dist="p3">távolság: —</span></span>
             </div>
           </div>
@@ -147,7 +151,6 @@
           </div>
 
           <img class="inline-image" src="../images/day01/04_landhaus_camping_pichler.jpg" alt="Landhaus &amp; Camping Pichler">
-
         </div>
 
       </div>
@@ -161,6 +164,8 @@
 
     </div>
   </div>
+
+  <!-- TÉRKÉP SCRIPT -->
   <script>
     /* global L */
     (function () {
@@ -169,27 +174,25 @@
       var el = document.getElementById("map");
       if (!el) { return; }
 
-      // Alaptérkép
       var map = L.map("map", { scrollWheelZoom: true });
+
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: "&copy; OpenStreetMap"
-    }).addTo(map);
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap"
+      }).addTo(map);
 
+      map.createPane("hillshade");
+      map.getPane("hillshade").style.zIndex = 350;
+      map.getPane("hillshade").style.mixBlendMode = "multiply";
+      map.getPane("hillshade").style.pointerEvents = "none";
 
-    // --- HILLSHADE (MULTIPLY) ESRI - FIX OPACITY 0.99 ---
-    map.createPane("hillshade");
-    map.getPane("hillshade").style.zIndex = 350;
-    map.getPane("hillshade").style.mixBlendMode = "multiply";
-    map.getPane("hillshade").style.pointerEvents = "none";
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}", {
+        pane: "hillshade",
+        opacity: 0.99,
+        maxZoom: 23,
+        attribution: "Hillshade: &copy; Esri"
+      }).addTo(map);
 
-    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}", {
-      pane: "hillshade",
-      opacity: 0.99,
-      maxZoom: 23,
-      attribution: "Hillshade: &copy; Esri"
-    }).addTo(map);
-// POI-k kigyűjtése a listából
       var poiEls = document.querySelectorAll(".poi");
       var pts = [];
       poiEls.forEach(function (poi) {
@@ -198,7 +201,6 @@
         if (!c) { return; }
         var txt = (c.textContent || "").trim();
 
-        // várjuk: "47.123, 15.456" vagy "47.123,15.456"
         var m = txt.match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
         if (!m) { return; }
 
@@ -212,13 +214,8 @@
         pts.push([lat, lon]);
       });
 
-
-      // GPX ROUTE START
-      // GPX útvonal kirajzolása (day01/tracks/day01.gpx)
       var bounds = null;
-      if (pts.length) {
-        bounds = L.latLngBounds(pts);
-      }
+      if (pts.length) bounds = L.latLngBounds(pts);
 
       var gpxUrl = "tracks/day01.gpx";
       var gpxLayer = new L.GPX(gpxUrl, {
@@ -249,19 +246,14 @@
       });
 
       gpxLayer.on("error", function () {
-        // ha a GPX nem talalhato vagy nem olvashato, csendben hagyjuk
+        // csend
       });
 
       gpxLayer.addTo(map);
-      // GPX ROUTE END
-      // Kezdő nézet
-      if (pts.length) {
-        map.fitBounds(pts, { padding: [18, 18] });
-      } else {
-        map.setView([47.0, 14.0], 7);
-      }
 
-      // --- AKTUÁLIS POZÍCIÓ (PIROS) ---
+      if (pts.length) map.fitBounds(pts, { padding: [18, 18] });
+      else map.setView([47.0, 14.0], 7);
+
       var meDot = null;
       var meAcc = null;
       var didCenter = false;
@@ -287,16 +279,13 @@
           }).addTo(map);
 
           if (!didCenter) {
-            // első fix: középre teszi, de nem rombolja szét a fitBounds-ot
             try { map.setView(ll, Math.min(14, map.getZoom() || 14)); } catch (e) { }
             didCenter = true;
           }
         } else {
           meDot.setLatLng(ll);
           meAcc.setLatLng(ll);
-          if (acc && isFinite(acc)) {
-            meAcc.setRadius(Math.max(10, acc));
-          }
+          if (acc && isFinite(acc)) meAcc.setRadius(Math.max(10, acc));
         }
       }
 
@@ -305,8 +294,8 @@
           var c = pos && pos.coords ? pos.coords : null;
           if (!c) { return; }
           setMe(c.latitude, c.longitude, c.accuracy);
-        }, function (err) {
-          // csendben hagyjuk (engedély/hiba)
+        }, function () {
+          // csend
         }, {
           enableHighAccuracy: true,
           maximumAge: 5000,
@@ -315,11 +304,201 @@
       }
     })();
   </script>
+
+  <!-- MÉRÉS SCRIPT (FIX: 1 GPS kérés ciklusonként) -->
+  <script>
+    (function () {
+      "use strict";
+
+      var DAY_ID = "sasfeszek:day01";
+      var t2 = null;
+      var sample1 = null;
+
+      function showNotice(show) {
+        var n = document.getElementById("gpsNotice");
+        if (!n) return;
+        n.style.display = show ? "block" : "none";
+      }
+
+      function collectPoisFromDom() {
+        var out = [];
+        document.querySelectorAll(".poi").forEach(function (poi) {
+          var id = poi.id;
+          var c = poi.querySelector(".coords");
+          if (!id || !c) return;
+
+          var m = (c.textContent || "").trim().match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
+          if (!m) return;
+
+          var lat = parseFloat(m[1]);
+          var lon = parseFloat(m[2]);
+          if (!isFinite(lat) || !isFinite(lon)) return;
+
+          out.push({ id: id, el: poi, lat: lat, lon: lon });
+        });
+        return out;
+      }
+
+      function setDot(id, cls) {
+        var dot = document.querySelector('[data-dot="' + id + '"]');
+        if (!dot) return;
+        dot.classList.remove("ok", "warn", "bad");
+        dot.classList.add(cls);
+      }
+
+      function setBadgeText(id, txt) {
+        var el = document.querySelector('[data-badgetext="' + id + '"]');
+        if (el) el.textContent = "mérés: " + txt;
+      }
+
+      function setDistText(id, meters) {
+        var el = document.querySelector('[data-dist="' + id + '"]');
+        if (!el) return;
+        var s = (typeof fmtMeters === "function") ? fmtMeters(meters) : (Math.round(meters) + " m");
+        el.textContent = "távolság: " + s;
+      }
+
+      function applyIndicator(id, ind) {
+        setDot(id, (ind && ind.cls) ? ind.cls : "warn");
+        setBadgeText(id, (ind && ind.text) ? ind.text : "mérve");
+      }
+
+      function scrollToPoi(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+
+        try {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        } catch (e) {
+          el.scrollIntoView(true);
+        }
+
+        el.classList.add("poi-target");
+        setTimeout(function () { el.classList.remove("poi-target"); }, 1200);
+      }
+
+      async function measureAllOnce(pois) {
+        pois.forEach(function (p) {
+          setDot(p.id, "warn");
+          setBadgeText(p.id, "mérés...");
+        });
+
+        // egyetlen pozíciókérés
+        var pos = await getPos(); // gps.js
+        var lat = pos.coords.latitude;
+        var lon = pos.coords.longitude;
+
+        var distById = {};
+        for (var i = 0; i < pois.length; i++) {
+          var p = pois[i];
+
+          var dist = haversineMeters(lat, lon, p.lat, p.lon); // gps.js
+          var key = storageKey(DAY_ID, p.id);                 // gps.js
+          var prev = parseFloat(localStorage.getItem(key));
+          localStorage.setItem(key, String(dist));
+
+          var delta = dist - prev;
+          var ind = indicatorFromDelta(delta);                // gps.js
+
+          distById[p.id] = dist;
+          setDistText(p.id, dist);
+          applyIndicator(p.id, ind);
+        }
+
+        return { lat: lat, lon: lon, distById: distById };
+      }
+
+      function nearestId(distById) {
+        var best = null, bestD = Infinity;
+        for (var id in distById) {
+          var d = distById[id];
+          if (d < bestD) { bestD = d; best = id; }
+        }
+        return best;
+      }
+
+      function pickTargetFromTwoSamples(s1, s2) {
+        if (!s1 || !s2) return null;
+
+        var moveM = haversineMeters(s1.lat, s1.lon, s2.lat, s2.lon);
+        if (!isFinite(moveM) || moveM < 30) {
+          return nearestId(s2.distById);
+        }
+
+        var bestId = null, bestScore = -Infinity, bestDist = Infinity;
+        for (var id2 in s2.distById) {
+          var d2 = s2.distById[id2];
+          var d1 = s1.distById[id2];
+          var score = (isFinite(d1) && isFinite(d2)) ? (d1 - d2) : 0;
+
+          if (score > bestScore + 1e-9) {
+            bestScore = score; bestId = id2; bestDist = d2;
+          } else if (Math.abs(score - bestScore) < 1e-9 && d2 < bestDist) {
+            bestId = id2; bestDist = d2;
+          }
+        }
+        return bestId;
+      }
+
+      async function runMeasureCycle(scrollAfter) {
+        if (t2) { clearTimeout(t2); t2 = null; }
+        showNotice(false);
+
+        var pois = collectPoisFromDom();
+        if (!pois.length) return;
+
+        try {
+          var s1 = await measureAllOnce(pois);
+          sample1 = s1;
+
+          if (scrollAfter) {
+            var nearest = nearestId(s1.distById);
+            if (nearest) scrollToPoi(nearest);
+          }
+
+          t2 = setTimeout(async function () {
+            try {
+              var s2 = await measureAllOnce(pois);
+              var target = pickTargetFromTwoSamples(sample1, s2);
+              if (target) scrollToPoi(target);
+            } catch (e2) {
+              showNotice(true);
+            }
+          }, 5000);
+
+        } catch (e) {
+          showNotice(true);
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () { runMeasureCycle(true); });
+      } else {
+        runMeasureCycle(true);
+      }
+
+      var btn = document.getElementById("btnNearest");
+      if (btn) {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          var old = btn.textContent;
+          btn.classList.add("active");
+          btn.textContent = "⏱ mérés...";
+
+          Promise.resolve(runMeasureCycle(true))
+            .catch(function(){})
+            .finally(function(){
+              btn.textContent = old;
+              btn.classList.remove("active");
+            });
+        });
+      }
+    })();
+  </script>
+
 </body>
-
 </html>
-
-
-
 
 
