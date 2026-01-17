@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAY01 1. Somló (A magányos tanúhegy)</title>
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Háttérkép ugyanaz, mint a hero image -->
+  <style>
+    body {
+      background: url("../images/day01/01_somlo_tanuhegy.jpg") center / cover no-repeat fixed;
+    }
+
+    /* térkép */
+    #map {
+      width: 100%;
+      height: 320px;
+      margin-top: 18px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="inner">
+        <div class="brand">
+          <div class="title">Sasfészek túra</div>
+          <div class="subtitle">DAY01 1. Somló (A magányos tanúhegy)</div>
+        </div>
+        <div class="btnrow">
+          <a class="btn" href="../index.html">🏠 Főoldal</a>
+          <a class="btn" href="index.html">📋 Lista nézet</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container">
+      <div class="card">
+
+        <div class="h1">1. Somló (A magányos tanúhegy)</div>
+        <div class="small">47.147311, 17.368018</div>
+
+        <!-- HERO IMAGE -->
+        
+
+        <img class="hero-image" src="../images/day01/01_somlo_tanuhegy.jpg" alt="Somló (A magányos tanúhegy)">
+
+
+        <div class="p">A Kisalföld síkjából magányosan kiemelkedő Somló 431 méteres bazalt tanúhegy, egy hajdani vulkán maradványa. Radiometrikus kormeghatározások a vulkáni kőzetekre kb. 3,5 millió évet adnak.</div>
+
+<div class="p">A bazalttakaró kemény sapkaként védte a hegyet, miközben a környező üledékes felszín fokozatosan lepusztult, ezért áll ma is ennyire jellegzetes csonkakúp formában.</div>
+
+<div class="p">A hegyoldalban bányafalak és feltárások mutatják a hűlő láva oszlopos elválását, a bazaltorgonákat. A sziklák tövében megbúvó Kőkonyha nevű kis mélyedés népi nevét arról kapta, hogy a füst az oszlopok között kéményszerűen távozott.</div>
+
+<div class="p">A Somló a Nagy Somlói borvidék névadója, fehérborairól ismert. A juhfark fajtához régi hagyomány kötődik, sokáig a „nászéjszakák borának” tartották.</div>
+
+<div class="p">A csúcson álló Somló vára valószínűleg a tatárjárás utáni időszakban épült, első okleveles említése 1352. A romok ma is az egyik legjobb kilátópontot adják a hegy tetején.</div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="poibtns">
+          <a class="btn btn-blue" href="https://www.google.com/maps/dir/?api=1&amp;origin=Current+Location&amp;destination=47.147311,17.368018" target="_blank" rel="noopener">🧭 Navigáció</a>
+<a class="btn btn-accent" href="index.html">📋 Lista nézet</a>
+        </div>
+
+        <div class="poibtns">
+          <a class="btn" href="../index.html">🏠 Főoldal</a>
+        </div>
+
+        <!-- MAP – LEGALUL -->
+        <div id="map"></div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ===== POI ===== */
+    const POI = {
+      name: &#x27;Somló (A magányos tanúhegy)&#x27;,
+      lat: 47.147311,
+      lon: 17.368018
+    };
+
+    /* ===== MAP INIT ===== */
+    const map = L.map("map").setView([POI.lat, POI.lon], 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "© OpenStreetMap"
+    }).addTo(map);
+
+    /* ===== POI MARKER ===== */
+    L.marker([POI.lat, POI.lon])
+      .addTo(map)
+      .bindPopup(`<b>${POI.name}</b>`);
+
+    /* ===== USER POSITION – PIROS ===== */
+    let userMarker = null;
+
+    const userIconRed = L.icon({
+      iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+      shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+      iconSize: [25, 41],
+      iconAnchor: [12, 41]
+    });
+
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(
+        pos => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+
+          if (!userMarker) {
+            userMarker = L.marker([lat, lon], { icon: userIconRed })
+              .addTo(map)
+              .bindPopup("📍 Itt vagy most");
+          } else {
+            userMarker.setLatLng([lat, lon]);
+          }
+        },
+        err => console.log("GPS hiba:", err),
+        { enableHighAccuracy: true }
+      );
+    }
+  </script>
+
+</body>
+
+</html>
