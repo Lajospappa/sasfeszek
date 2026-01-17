@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="ChatGPT" schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/PowerExtension/v1 http://www.garmin.com/xmlschemas/PowerExtensionv1.xsd http://www.topografix.com/GPX/gpx_style/0/2 http://www.topografix.com/GPX/gpx_style/0/2/gpx_style.xsd" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xmlns:gpxpx="http://www.garmin.com/xmlschemas/PowerExtension/v1" xmlns:gpx_style="http://www.topografix.com/GPX/gpx_style/0/2">
+  <metadata>
+    <name>Sasfész túra – kiemelt POI-k (2. nap)</name>
+    <author>
+      <name>gpx.studio</name>
+      <link href="https://gpx.studio"/>
+    </author>
+    <time>2026-01-06T21:41:03.363Z</time>
+  </metadata>
+  <wpt lat="47.521045" lon="14.954738">
+    <name>Präbichl-hágó</name>
+  </wpt>
+  <wpt lat="47.538139559771366" lon="14.926539360931969">
+    <ele>1058.7215032340505</ele>
+    <name>Erzberg (Vas-hegy)</name>
+  </wpt>
+  <wpt lat="47.70183938964735" lon="14.460694831334223">
+    <ele>993.0622289708056</ele>
+    <name>Hengst-hágó (Hengstpaß)</name>
+  </wpt>
+  <wpt lat="47.91678324968555" lon="13.796486031357546">
+    <ele>426.12019171617084</ele>
+    <name>Traunsee + Seeschloss Ort (Gmunden) – rálátás</name>
+  </wpt>
+  <wpt lat="47.84872929950052" lon="13.659273879779022">
+    <ele>633.80647648871</ele>
+    <name>Großalmstraße (Traunsee–Attersee összekötő)</name>
+  </wpt>
+  <wpt lat="47.82099905016881" lon="13.547481990326986">
+    <ele>470.1285476512585</ele>
+    <name>Attersee (keleti part)</name>
+  </wpt>
+  <wpt lat="47.63035719082362" lon="13.005815521006923">
+    <ele>531.2600488533215</ele>
+    <name>Berchtesgaden + Watzmann</name>
+  </wpt>
+  <wpt lat="47.59485" lon="12.986016">
+    <name>CÉL – Königssee</name>
+  </wpt>
+  <wpt lat="0" lon="0">
+    <ele>0</ele>
+  </wpt>
+  <wpt lat="47.806036" lon="13.439962">
+    <ele>489.8409545956182</ele>
+    <name>Mondsee</name>
+  </wpt>
+  <wpt lat="47.628433" lon="13.09446">
+    <ele>1520.4242297113874</ele>
+    <name>Rossfeld Panorama Strasse</name>
+  </wpt>
+  <wpt lat="47.633827" lon="13.042848">
+    <ele>912.3935149964173</ele>
+    <name>Hitler eredeti bukere</name>
+  </wpt>
+</gpx>

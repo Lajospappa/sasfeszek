@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="ChatGPT" schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/PowerExtension/v1 http://www.garmin.com/xmlschemas/PowerExtensionv1.xsd http://www.topografix.com/GPX/gpx_style/0/2 http://www.topografix.com/GPX/gpx_style/0/2/gpx_style.xsd" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xmlns:gpxpx="http://www.garmin.com/xmlschemas/PowerExtension/v1" xmlns:gpx_style="http://www.topografix.com/GPX/gpx_style/0/2">
+  <metadata>
+    <name>Sasfész túra – kiemelt POI-k (3. nap)</name>
+    <author>
+      <name>gpx.studio</name>
+      <link href="https://gpx.studio"/>
+    </author>
+    <time>2026-01-06T21:41:03.363Z</time>
+  </metadata>
+  <wpt lat="47.63035719082362" lon="13.005815521006923">
+    <ele>531.2600488533215</ele>
+    <name>Berchtesgaden + Watzmann</name>
+  </wpt>
+  <wpt lat="47.595163" lon="12.986357">
+    <name>START – Königssee / Berchtesgaden</name>
+  </wpt>
+  <wpt lat="47.630588" lon="13.041697">
+    <name>Kehlsteinhaus (Sasfészek) – Obersalzberg parkoló / buszindulás</name>
+  </wpt>
+  <wpt lat="47.584321" lon="13.535874">
+    <name>Gosau-völgy (Dachstein előszobája)</name>
+  </wpt>
+  <wpt lat="47.553085" lon="13.647849">
+    <ele>508.94215580006164</ele>
+    <name>Camping Klausner-Höll</name>
+    <cmt>https://camping.hallstatt.net/</cmt>
+    <desc>https://camping.hallstatt.net/</desc>
+  </wpt>
+  <wpt lat="0" lon="0">
+    <ele>0</ele>
+  </wpt>
+  <wpt lat="47.59142073944065" lon="13.505548721237744">
+    <ele>968.9199616535102</ele>
+    <name>Pass Gschütt (Gschütt-hágó)</name>
+  </wpt>
+  <wpt lat="47.58863515207551" lon="13.562701823451619">
+    <ele>729.2939219809776</ele>
+    <name>Gosau-völgy (Dachstein előszobája)</name>
+  </wpt>
+</gpx>
